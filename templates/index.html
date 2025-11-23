@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1 class="mb-4">Medical Diagnosis AI System</h1>
+            <p class="lead">Select a diagnostic tool below:</p>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Heart Disease Prediction</h5>
+                    <p class="card-text">Predict the risk of heart disease using patient data</p>
+                    <a href="{{ url_for('heart_disease') }}" class="btn btn-primary">Use Tool</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Pneumonia Detection</h5>
+                    <p class="card-text">Detect pneumonia from chest X-ray images</p>
+                    <a href="{{ url_for('pneumonia') }}" class="btn btn-primary">Use Tool</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Diabetes Prediction</h5>
+                    <p class="card-text">Predict diabetes risk (Coming Soon)</p>
+                    <a href="{{ url_for('diabetes') }}" class="btn btn-secondary disabled">Coming Soon</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

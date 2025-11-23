@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Diabetes Prediction{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2>Diabetes Prediction</h2>
+                <div class="alert alert-info mt-3">
+                    <h4>Coming Soon!</h4>
+                    <p>The diabetes prediction model is currently under development.</p>
+                    <p>We're working hard to integrate this feature and will make it available soon.</p>
+                </div>
+                <form method="POST" action="{{ url_for('predict_diabetes') }}">
+                    <button type="submit" class="btn btn-secondary btn-lg" disabled>Predict Diabetes Risk</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
