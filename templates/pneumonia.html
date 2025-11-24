@@ -3,43 +3,41 @@
 {% block title %}Pneumonia Detection{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="mb-4">
-                <h2>Pneumonia Detection from Chest X-ray</h2>
-                <p class="text-muted">Upload a chest X-ray image to detect pneumonia</p>
+<div class="predictor-page">
+    <div class="page-heading">
+        <span class="eyebrow-chip">Pulmonology</span>
+        <h2 class="gradient-text">Pneumonia Detection from Chest X-ray</h2>
+        <p class="text-muted">Upload a chest X-ray image to detect pneumonia.</p>
+    </div>
+
+    <div class="glass-panel form-panel">
+        <form method="POST" action="{{ url_for('predict_pneumonia') }}" enctype="multipart/form-data">
+            <div class="input-card file-card">
+                <label class="form-label">Select Chest X-ray Image</label>
+                <input type="file" class="form-control" name="image" accept="image/*" required>
+                <div class="form-text">Supported formats: JPEG, PNG. Max size: 16MB.</div>
             </div>
             
-            <div class="card">
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('predict_pneumonia') }}" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label class="form-label">Select Chest X-ray Image</label>
-                            <input type="file" class="form-control" name="image" accept="image/*" required>
-                            <div class="form-text">Supported formats: JPEG, PNG. Max size: 16MB</div>
-                        </div>
-                        
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-lg">Analyze X-ray</button>
-                            <a href="{{ url_for('home') }}" class="btn btn-secondary btn-lg">Cancel</a>
-                        </div>
-                    </form>
-                </div>
+            <div class="action-row">
+                <button type="submit" class="btn btn-primary btn-lg">Analyze X-ray</button>
+                <a href="{{ url_for('home') }}" class="btn btn-outline-light btn-lg">Cancel</a>
             </div>
-            
-            <div class="card mt-4">
-                <div class="card-body">
-                    <h5>Instructions:</h5>
-                    <ul>
-                        <li>Upload a clear chest X-ray image</li>
-                        <li>Ensure the image shows the full chest area</li>
-                        <li>Image will be resized to 224x224 pixels for analysis</li>
-                        <li>Results show probability of pneumonia detection</li>
-                    </ul>
-                </div>
+        </form>
+    </div>
+
+    <div class="glass-panel mt-4 info-panel">
+        <div class="panel-header">
+            <div>
+                <span class="panel-eyebrow">Upload Checklist</span>
+                <h5>Instructions</h5>
             </div>
         </div>
+        <ul class="info-list">
+            <li>Use a clear PA or AP chest X-ray.</li>
+            <li>Ensure the full thoracic cavity is visible without cropping.</li>
+            <li>Files are normalized and resized to 224×224 px before inference.</li>
+            <li>Results return pneumonia probability with class label.</li>
+        </ul>
     </div>
 </div>
 {% endblock %}

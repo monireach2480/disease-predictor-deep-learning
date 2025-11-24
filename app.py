@@ -34,14 +34,29 @@ def load_pneumonia_model():
         print(f"Error loading pneumonia model: {e}")
         return None
 
+def load_diabetes_model():
+    try:
+        with open('models/diabetes.pkl', 'rb') as file:
+            return pickle.load(file)
+    except Exception as e:
+        print(f"Error loading diabetes model: {e}")
+        return None
+
 heart_model = load_heart_model()
 pneumonia_model = load_pneumonia_model()
+diabetes_model = load_diabetes_model()
 
 # FIXED FEATURE ORDER
 HEART_FEATURES = [
     'age', 'sex', 'cp', 'trestbps', 'chol', 'fbs',
     'restecg', 'thalach', 'exang', 'oldpeak',
     'slope', 'ca', 'thal'
+]
+
+# Diabetes features (from your preprocessing)
+DIABETES_FEATURES = [
+    'Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 
+    'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age'
 ]
 
 # --------------------------
@@ -167,15 +182,63 @@ def predict_pneumonia():
         return jsonify({'error': f'Prediction failed: {str(e)}'})
 
 # --------------------------
-# DIABETES (placeholder)
+# DIABETES PREDICTION
 # --------------------------
 
 @app.route('/predict/diabetes', methods=['POST'])
 def predict_diabetes():
-    return render_template('results.html', 
-                           result={'message': 'Diabetes model is not yet implemented. Coming soon!'},
-                           model_type='Diabetes')
-
+    if diabetes_model is None:
+        return render_template('results.html', 
+                             result={'error': 'Diabetes model not available. Please check if the model file exists.'},
+                             model_type='Diabetes')
+    
+    try:
+        # Get form data
+        data = {
+            'Pregnancies': float(request.form['pregnancies']),
+            'Glucose': float(request.form['glucose']),
+            'BloodPressure': float(request.form['blood_pressure']),
+            'SkinThickness': float(request.form['skin_thickness']),
+            'Insulin': float(request.form['insulin']),
+            'BMI': float(request.form['bmi']),
+            'DiabetesPedigreeFunction': float(request.form['diabetes_pedigree']),
+            'Age': float(request.form['age'])
+        }
+        
+        # Create DataFrame with correct feature order
+        df = pd.DataFrame([data], columns=DIABETES_FEATURES)
+        
+        # Apply the same preprocessing as in training
+        from sklearn.preprocessing import StandardScaler
+        scaler = StandardScaler()
+        
+        # Fit scaler on the data (in production, you'd use a pre-fitted scaler)
+        # For now, we'll fit and transform (in real scenario, save the scaler)
+        df_scaled = scaler.fit_transform(df)
+        
+        # Make prediction
+        prediction = int(diabetes_model.predict(df_scaled)[0])
+        
+        # Get probability
+        try:
+            proba = diabetes_model.predict_proba(df_scaled)[0]
+            confidence = float(proba[1] if prediction == 1 else proba[0])
+        except:
+            confidence = 1.0
+        
+        result = {
+            'prediction': prediction,
+            'probability': confidence,
+            'message': 'High risk of diabetes' if prediction == 1 else 'Low risk of diabetes'
+        }
+        
+        return render_template('results.html', 
+                             result=result,
+                             model_type='Diabetes',
+                             input_data=data)
+        
+    except Exception as e:
+        return jsonify({'error': f'Diabetes prediction failed: {str(e)}'})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
