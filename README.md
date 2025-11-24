@@ -1,6 +1,6 @@
 # Disease Predictor (Deep Learning & ML)
 
-![Disease Predictor Demo](./images/image.png)
+![Disease Predictor Demo](./images/images.png)
 
 A Flask-powered medical diagnostics suite that runs three pre-trained models:
 - Random Forest for heart disease risk
